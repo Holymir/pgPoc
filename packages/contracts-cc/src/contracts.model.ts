@@ -65,3 +65,13 @@ export class Contracts extends ConvectorModel<Contracts> {
   @Validate(yup.string())
   public assignedFor: string;
 }
+
+export class Car extends ConvectorModel<Car> {
+  @ReadOnly()
+  @Required()
+  public readonly type = 'io.worldsibu.contracts';
+
+  @Required()
+  @Validate(yup.string())
+  public name: string;
+}

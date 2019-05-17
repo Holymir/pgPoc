@@ -15,3 +15,7 @@ export declare class Contracts extends ConvectorModel<Contracts> {
     isConfirmed: boolean;
     assignedFor: string;
 }
+export declare class Car extends ConvectorModel<Car> {
+    readonly type: string;
+    name: string;
+}

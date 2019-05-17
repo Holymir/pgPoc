@@ -8,10 +8,11 @@ import {
 import * as yup from 'yup';
 
 
-import { Contracts } from './contracts.model';
+import { Contracts, Car } from './contracts.model';
 
 @Controller('contracts')
 export class ContractsController extends ConvectorController<ChaincodeTx> {
+
   @Invokable()
   public async create(
     @Param(Contracts)
@@ -39,5 +40,21 @@ export class ContractsController extends ConvectorController<ChaincodeTx> {
     }
     contract.isConfirmed = true;
     await contract.save();
+  }
+
+  @Invokable()
+  public async demoFunction(
+      @Param(Car)
+          car: Car
+  ) {
+    await car.save();
+  }
+
+  @Invokable()
+  public async getDemo(
+      @Param(yup.string())
+          id: string
+  ) {
+    return Car.getOne(id);
   }
 }

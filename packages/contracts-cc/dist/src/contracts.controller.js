@@ -49,6 +49,25 @@ var ContractsController = (function (_super) {
             });
         });
     };
+    ContractsController.prototype.demoFunction = function (car) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, car.save()];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    ContractsController.prototype.getDemo = function (id) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
+                return [2, contracts_model_1.Car.getOne(id)];
+            });
+        });
+    };
     tslib_1.__decorate([
         convector_core_1.Invokable(),
         tslib_1.__param(0, convector_core_1.Param(contracts_model_1.Contracts)),
@@ -58,6 +77,14 @@ var ContractsController = (function (_super) {
         convector_core_1.Invokable(),
         tslib_1.__param(0, convector_core_1.Param(yup.string()))
     ], ContractsController.prototype, "confirmContract", null);
+    tslib_1.__decorate([
+        convector_core_1.Invokable(),
+        tslib_1.__param(0, convector_core_1.Param(contracts_model_1.Car))
+    ], ContractsController.prototype, "demoFunction", null);
+    tslib_1.__decorate([
+        convector_core_1.Invokable(),
+        tslib_1.__param(0, convector_core_1.Param(yup.string()))
+    ], ContractsController.prototype, "getDemo", null);
     ContractsController = tslib_1.__decorate([
         convector_core_1.Controller('contracts')
     ], ContractsController);

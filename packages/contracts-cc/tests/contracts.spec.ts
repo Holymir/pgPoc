@@ -23,7 +23,7 @@ describe('Contracts', () => {
       "MIHIMA4GA1UdDwEB/wQEAwIHgDAMBgNVHRMBAf8EAjAAMB0GA1UdDgQWBBQSCdpd" +
       "livYtF4YRUhbaSojqVJAqjArBgNVHSMEJDAigCAKtHE7mN0D4BSlAwtfdsVSK2NU" +
       "7NMnN3LWCbEsPM6vSzBcBggqAwQFBgcIAQRQeyJhdHRycyI6eyJoZi5BZmZpbGlh" +
-      "dGlvbiI6Im9yZzEiLCJoZi5FbnJvbGxtZW50SUQiOiJ1c2VyMSIsImhmLlR5cGUi" +
+      "dGlvbiI6Im9yZzEiLCJoZi5F  bnJvbGxtZW50SUQiOiJ1c2VyMSIsImhmLlR5cGUi" +
       "OiJjbGllbnQifX0wCgYIKoZIzj0EAwIDSAAwRQIhAKYd7jmLC/UuDnikagWfo2tg" +
       "Mx3T/+/yYdeHr6RySAz0AiBCN7Q6wOJ/aAqW4v1g/DBnccaJ/7e/jRPugO2a3Win" +
       "SA==-----END CERTIFICATE-----";
