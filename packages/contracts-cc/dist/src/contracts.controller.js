@@ -9,13 +9,14 @@ var ContractsController = (function (_super) {
     function ContractsController() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    ContractsController.prototype.create = function (contracts, assignedFor) {
+    ContractsController.prototype.createContract = function (contracts, assignedFor) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         contracts.isConfirmed = false;
                         contracts.assignedFor = assignedFor;
+                        contracts.pngAddress = this.sender;
                         return [4, contracts.save()];
                     case 1:
                         _a.sent();
@@ -24,19 +25,31 @@ var ContractsController = (function (_super) {
             });
         });
     };
+    ContractsController.prototype.getContract = function (contractId) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
+                return [2, contracts_model_1.Contracts.getOne(contractId).then(function (model) { return model.toJSON(); })];
+            });
+        });
+    };
+    ContractsController.prototype.getAllContracts = function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
+                return [2, contracts_model_1.Contracts.getAll().then(function (models) { return models.map(function (model) { return model.toJSON(); }); })];
+            });
+        });
+    };
     ContractsController.prototype.confirmContract = function (contractId) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var contract;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        console.log("!!!HERE!!!");
-                        console.log(this.sender);
-                        console.log(this.tx.identity.getAttributeValue("hf.Affiliation"));
-                        console.log(this.tx.identity);
-                        return [4, contracts_model_1.Contracts.getOne(contractId)];
+                    case 0: return [4, contracts_model_1.Contracts.getOne(contractId)];
                     case 1:
                         contract = _a.sent();
+                        if (this.sender == contract.pngAddress) {
+                            throw new Error("Confirming your own contacts is not allowed");
+                        }
                         if (this.tx.identity.getAttributeValue("hf.Affiliation") !== contract.assignedFor) {
                             throw new Error("Your organisation \"" + this.tx.identity.getAttributeValue("hf.Affiliation") + "\" is not allowed to sign this contract ");
                         }
@@ -49,22 +62,63 @@ var ContractsController = (function (_super) {
             });
         });
     };
-    ContractsController.prototype.demoFunction = function (car) {
+    ContractsController.prototype.declineContract = function (contractId) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var contract;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, car.save()];
+                    case 0: return [4, contracts_model_1.Contracts.getOne(contractId)];
                     case 1:
+                        contract = _a.sent();
+                        contract.isConfirmed = false;
+                        return [4, contract.save()];
+                    case 2:
                         _a.sent();
                         return [2];
                 }
             });
         });
     };
-    ContractsController.prototype.getDemo = function (id) {
+    ContractsController.prototype.invokeClaim = function (claim) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var contractID, contract;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        contractID = claim.contractID;
+                        return [4, contracts_model_1.Contracts.getOne(contractID)];
+                    case 1:
+                        contract = _a.sent();
+                        if (contract.isConfirmed) {
+                            throw new Error("Contract " + contract.name + " is approved");
+                        }
+                        console.log(contract.endDate);
+                        console.log(Date.now());
+                        if (contract.endDate < Date.now()) {
+                            throw new Error("Contract " + contract.name + " is outdated");
+                        }
+                        if (contract.claimAmount != claim.amount) {
+                            claim.isApproved = true;
+                        }
+                        return [4, claim.save()];
+                    case 2:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    ContractsController.prototype.getClaim = function (claimID) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
-                return [2, contracts_model_1.Car.getOne(id)];
+                return [2, contracts_model_1.Claim.getOne(claimID).then(function (model) { return model.toJSON(); })];
+            });
+        });
+    };
+    ContractsController.prototype.getAllClaims = function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
+                return [2, contracts_model_1.Claim.getAll().then(function (models) { return models.map(function (model) { return model.toJSON(); }); })];
             });
         });
     };
@@ -72,19 +126,33 @@ var ContractsController = (function (_super) {
         convector_core_1.Invokable(),
         tslib_1.__param(0, convector_core_1.Param(contracts_model_1.Contracts)),
         tslib_1.__param(1, convector_core_1.Param(yup.string()))
-    ], ContractsController.prototype, "create", null);
+    ], ContractsController.prototype, "createContract", null);
+    tslib_1.__decorate([
+        convector_core_1.Invokable(),
+        tslib_1.__param(0, convector_core_1.Param(yup.string()))
+    ], ContractsController.prototype, "getContract", null);
+    tslib_1.__decorate([
+        convector_core_1.Invokable()
+    ], ContractsController.prototype, "getAllContracts", null);
     tslib_1.__decorate([
         convector_core_1.Invokable(),
         tslib_1.__param(0, convector_core_1.Param(yup.string()))
     ], ContractsController.prototype, "confirmContract", null);
     tslib_1.__decorate([
         convector_core_1.Invokable(),
-        tslib_1.__param(0, convector_core_1.Param(contracts_model_1.Car))
-    ], ContractsController.prototype, "demoFunction", null);
+        tslib_1.__param(0, convector_core_1.Param(yup.string()))
+    ], ContractsController.prototype, "declineContract", null);
+    tslib_1.__decorate([
+        convector_core_1.Invokable(),
+        tslib_1.__param(0, convector_core_1.Param(contracts_model_1.Claim))
+    ], ContractsController.prototype, "invokeClaim", null);
     tslib_1.__decorate([
         convector_core_1.Invokable(),
         tslib_1.__param(0, convector_core_1.Param(yup.string()))
-    ], ContractsController.prototype, "getDemo", null);
+    ], ContractsController.prototype, "getClaim", null);
+    tslib_1.__decorate([
+        convector_core_1.Invokable()
+    ], ContractsController.prototype, "getAllClaims", null);
     ContractsController = tslib_1.__decorate([
         convector_core_1.Controller('contracts')
     ], ContractsController);

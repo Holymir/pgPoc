@@ -14,8 +14,18 @@ export declare class Contracts extends ConvectorModel<Contracts> {
     organization: string;
     isConfirmed: boolean;
     assignedFor: string;
+    pngAddress: string;
 }
-export declare class Car extends ConvectorModel<Car> {
+export declare class Claim extends ConvectorModel<Claim> {
     readonly type: string;
-    name: string;
+    contractID: string;
+    companyCode: number;
+    customerNumber: number;
+    documentNumber: number;
+    documentDate: number;
+    lineItem: number;
+    reasonCode: string;
+    amount: number;
+    currency: string;
+    isApproved: boolean;
 }

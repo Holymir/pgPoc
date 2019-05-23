@@ -14,16 +14,12 @@ router.post('/', async (req: Request, res: Response) => {
 
 router.post('/contract', async (req: Request, res: Response) => {
     console.log("post contract...");
-    // console.log(req.body[0]);
-    // console.log(req.body[1].org);
     await ContractsControllerBackEnd.create(req.body[0], req.body[1].org);
     res.send(201);
 });
 
 router.get('/contract/:id', async (req: Request, res: Response) => {
     console.log("post contract...");
-    // console.log(req.body[0]);
-    // console.log(req.body[1].org);
     await ContractsControllerBackEnd.confirmContract(req.params.id);
     res.send(201);
 });

@@ -1,15 +1,16 @@
 // tslint:disable:no-unused-expression
-import { join } from 'path';
+import {join, resolve} from 'path';
 import { expect } from 'chai';
 import * as uuid from 'uuid/v4';
 import { MockControllerAdapter } from '@worldsibu/convector-adapter-mock';
 import { ClientFactory, ConvectorControllerClient } from '@worldsibu/convector-core';
 import 'mocha';
 
-import { Contracts, ContractsController } from '../src';
+import { Contracts, Claim, ContractsController } from '../src';
 
 describe('Contracts', () => {
   let adapter: MockControllerAdapter;
+
   let contractsCtrl: ConvectorControllerClient<ContractsController>;
 
   const org1UserCert = "-----BEGIN CERTIFICATE-----" +
@@ -44,16 +45,71 @@ describe('Contracts', () => {
       "JV+pXSJ4dJDp7KEVRw0bAiAI4rWse9lE4zDZL9kffv4mSp++TOnCvnI5fiA5LExA" +
       "1w==-----END CERTIFICATE-----";
 
-  let staticID = uuid();
-  let invoiceNumber = 123;
-  let invoiceLineItem = 1234;
-  let invoiceAmount = 12345;
-  let claimAmount = 123456;
-  let claimReasonCode = 1234567;
-  let resolutionCode = 12345678;
-  let resolutionAmount = 123456789;
-  let endDate = new Date(Date.now()).setDate(new Date(Date.now()).getDate() + 10);
-  let organization = "OtherOrganisation";
+  // contract model
+  const staticID = uuid();
+  const staticID2 = uuid(1);
+  const invoiceNumber = 123;
+  const invoiceLineItem = 1234;
+  const invoiceAmount = 12345;
+  const claimAmount = 1000;
+  const claimReasonCode = 1234567;
+  const resolutionCode = 12345678;
+  const resolutionAmount = 123456789;
+  const endDate = new Date(Date.now()).setDate(new Date(Date.now()).getDate() + 10);
+  const organization = "OtherOrganisation";
+
+  // claim model
+  const claimID = uuid(2);
+  const companyCode = 123;
+  const customerNumber = 234;
+  const documentNumber = 345;
+  const lineItem = 456;
+  const reasonCode = "567";
+  const currency = "GRD";
+
+  const contractSample = new Contracts({
+    id: staticID,
+    name: 'First Contract',
+    invoiceNumber: invoiceNumber,
+    invoiceLineItem: invoiceLineItem,
+    invoiceAmount: invoiceAmount,
+    claimAmount: claimAmount,
+    claimReasonCode: claimReasonCode,
+    resolutionCode: resolutionCode,
+    resolutionAmount: resolutionAmount,
+    startDate: Date.now(),
+    endDate: endDate,
+    organization: organization
+  });
+
+  const contractSample2 = new Contracts({
+    id: staticID2,
+    name: 'Second Contract',
+    invoiceNumber: invoiceNumber,
+    invoiceLineItem: invoiceLineItem,
+    invoiceAmount: invoiceAmount,
+    claimAmount: claimAmount,
+    claimReasonCode: claimReasonCode,
+    resolutionCode: resolutionCode,
+    resolutionAmount: resolutionAmount,
+    startDate: Date.now(),
+    endDate: endDate,
+    organization: organization
+  });
+
+  const claimSample = new Claim({
+    id: claimID,
+    contractID: staticID,
+    companyCode: companyCode,
+    customerNumber: customerNumber,
+    documentNumber: documentNumber,
+    documentDate: Date.now(),
+    lineItem: lineItem,
+    reasonCode: reasonCode,
+    amount: claimAmount,
+    currency: currency,
+    isApproved: false
+  });
 
   before(async () => {
     // Mocks the blockchain execution environment
@@ -69,34 +125,48 @@ describe('Contracts', () => {
     ]);
   });
 
-  it('should create a default model', async () => {
-    const modelSample = new Contracts({
-      id: staticID,
-      name: 'Test',
-      invoiceNumber: invoiceNumber,
-      invoiceLineItem: invoiceLineItem,
-      invoiceAmount: invoiceAmount,
-      claimAmount: claimAmount,
-      claimReasonCode: claimReasonCode,
-      resolutionCode: resolutionCode,
-      resolutionAmount: resolutionAmount,
-      startDate: Date.now(),
-      endDate: endDate,
-      organization: organization
-    });
+  it('should create contract proposal', async () => {
+    await contractsCtrl.createContract(contractSample, "org1");
 
-    await contractsCtrl.create(modelSample, "org1");
-
-    const justSavedModel = await adapter.getById<Contracts>(modelSample.id);
-
+    const justSavedModel = await adapter.getById<Contracts>(contractSample.id);
     expect(justSavedModel.id).to.exist;
   });
 
   it('should approve contract', async () => {
     (adapter.stub as any).usercert = org2UserCert;
-    console.log(adapter.stub);
     await contractsCtrl.confirmContract(staticID);
     const savedContract = await adapter.getById<Contracts>(staticID);
     expect(savedContract.isConfirmed).to.eq(true);
+  });
+
+  it('should not approve contract if tried from uploader', async () => {
+    await contractsCtrl.confirmContract(staticID);
+    const savedContract = await adapter.getById<Contracts>(staticID);
+    expect(savedContract.isConfirmed).to.eq(true);
+  });
+
+  it('should decline contract', async () => {
+    (adapter.stub as any).usercert = org2UserCert;
+    await contractsCtrl.declineContract(staticID);
+    const savedContract = await adapter.getById<Contracts>(staticID);
+    expect(savedContract.isConfirmed).to.eq(false);
+  });
+
+  it('should return one contract', async () => {
+    let contract = await contractsCtrl.getContract(staticID);
+    expect(contract.id).to.exist;
+  });
+
+  it('should return all contract', async () => {
+    await contractsCtrl.createContract(contractSample2, "org2");
+
+    let contract = await contractsCtrl.getAllContracts();
+    contract.forEach(contract => expect(contract.id).to.exist);
+  });
+
+  it('should invoke claim', async () => {
+    await contractsCtrl.invokeClaim(claimSample);
+    let claim = await contractsCtrl.getClaim(claimID);
+    expect(claim.isApproved);
   });
 });
