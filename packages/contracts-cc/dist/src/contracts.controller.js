@@ -9,13 +9,12 @@ var ContractsController = (function (_super) {
     function ContractsController() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    ContractsController.prototype.createContract = function (contracts, assignedFor) {
+    ContractsController.prototype.createContract = function (contracts) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         contracts.isConfirmed = false;
-                        contracts.assignedFor = assignedFor;
                         contracts.pngAddress = this.sender;
                         return [4, contracts.save()];
                     case 1:
@@ -92,8 +91,6 @@ var ContractsController = (function (_super) {
                         if (contract.isConfirmed) {
                             throw new Error("Contract " + contract.name + " is approved");
                         }
-                        console.log(contract.endDate);
-                        console.log(Date.now());
                         if (contract.endDate < Date.now()) {
                             throw new Error("Contract " + contract.name + " is outdated");
                         }
@@ -124,8 +121,7 @@ var ContractsController = (function (_super) {
     };
     tslib_1.__decorate([
         convector_core_1.Invokable(),
-        tslib_1.__param(0, convector_core_1.Param(contracts_model_1.Contracts)),
-        tslib_1.__param(1, convector_core_1.Param(yup.string()))
+        tslib_1.__param(0, convector_core_1.Param(contracts_model_1.Contracts))
     ], ContractsController.prototype, "createContract", null);
     tslib_1.__decorate([
         convector_core_1.Invokable(),

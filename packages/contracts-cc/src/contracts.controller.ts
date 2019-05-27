@@ -18,11 +18,8 @@ export class ContractsController extends ConvectorController<ChaincodeTx> {
   public async createContract(
     @Param(Contracts)
       contracts: Contracts,
-    @Param(yup.string())
-      assignedFor: string
   ) {
     contracts.isConfirmed = false;
-    contracts.assignedFor = assignedFor;
     contracts.pngAddress = this.sender;
     await contracts.save();
   }
@@ -79,7 +76,7 @@ export class ContractsController extends ConvectorController<ChaincodeTx> {
     @Param(Claim)
     claim: Claim
   ) {
-    // waiting for Olivia to send us the metadata struct
+    // waiting for Olivia to send us the metadata structure
     let contractID = claim.contractID;
     const contract = await Contracts.getOne(contractID);
 
@@ -90,9 +87,6 @@ export class ContractsController extends ConvectorController<ChaincodeTx> {
     if(contract.endDate < Date.now()) {
       throw new Error(`Contract ${contract.name} is outdated`)
     }
-
-    // console.log(contract.claimAmount);
-    // console.log(claim.amount);
 
     if (contract.claimAmount != claim.amount) {
       claim.isApproved = true;

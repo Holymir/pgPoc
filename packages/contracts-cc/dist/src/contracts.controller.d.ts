@@ -2,7 +2,7 @@ import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import { ConvectorController } from '@worldsibu/convector-core';
 import { Contracts, Claim } from './contracts.model';
 export declare class ContractsController extends ConvectorController<ChaincodeTx> {
-    createContract(contracts: Contracts, assignedFor: string): Promise<void>;
+    createContract(contracts: Contracts): Promise<void>;
     getContract(contractId: string): Promise<{
         readonly type?: "io.worldsibu.contracts";
         name?: string;

@@ -66,6 +66,7 @@ describe('Contracts', () => {
   const lineItem = 456;
   const reasonCode = "567";
   const currency = "GRD";
+  const assignedFor = "org1";
 
   const contractSample = new Contracts({
     id: staticID,
@@ -79,7 +80,8 @@ describe('Contracts', () => {
     resolutionAmount: resolutionAmount,
     startDate: Date.now(),
     endDate: endDate,
-    organization: organization
+    organization: organization,
+    assignedFor: assignedFor
   });
 
   const contractSample2 = new Contracts({
@@ -93,8 +95,9 @@ describe('Contracts', () => {
     resolutionCode: resolutionCode,
     resolutionAmount: resolutionAmount,
     startDate: Date.now(),
-    endDate: endDate,
-    organization: organization
+    endDate: Date.now(),
+    organization: organization,
+    assignedFor: assignedFor
   });
 
   const claimSample = new Claim({
@@ -126,7 +129,7 @@ describe('Contracts', () => {
   });
 
   it('should create contract proposal', async () => {
-    await contractsCtrl.createContract(contractSample, "org1");
+    await contractsCtrl.createContract(contractSample);
 
     const justSavedModel = await adapter.getById<Contracts>(contractSample.id);
     expect(justSavedModel.id).to.exist;
@@ -158,15 +161,33 @@ describe('Contracts', () => {
   });
 
   it('should return all contract', async () => {
-    await contractsCtrl.createContract(contractSample2, "org2");
+    await contractsCtrl.createContract(contractSample2);
 
     let contract = await contractsCtrl.getAllContracts();
     contract.forEach(contract => expect(contract.id).to.exist);
   });
 
-  it('should invoke claim', async () => {
+  it('should invoke a valid claim', async () => {
     await contractsCtrl.invokeClaim(claimSample);
     let claim = await contractsCtrl.getClaim(claimID);
     expect(claim.isApproved);
   });
+
+  it('should invoke an outdated claim', async () => {
+    claimSample.documentDate = new Date(Date.now()).setDate(new Date(Date.now()).getDate() + 20);
+    claimSample.contractID = staticID2;
+
+    await expect(contractsCtrl.invokeClaim(claimSample)).to.throw;
+  });
+
+  it('should return one claim', async () => {
+    let claim = await contractsCtrl.getClaim(claimID);
+    expect(claim.id == claimID);
+  });
+
+  it('should return one claim', async () => {
+    let claim = await contractsCtrl.getAllClaims();
+    claim.forEach(claim => expect(claim.id).to.exist);
+  });
+
 });
