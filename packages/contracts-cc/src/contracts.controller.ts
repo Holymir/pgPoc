@@ -28,14 +28,13 @@ export class ContractsController extends ConvectorController<ChaincodeTx> {
       @Param(yup.string())
           contractId: string
   ) {
-    let contract = await Contracts.getOne(contractId);
-    return contract; //.then(model => model.toJSON());
+    return await Contracts.getOne(contractId);
   }
 
   @Invokable()
   public async getAllContracts(
   ) {
-    return Contracts.getAll(); //.then(models => models.map(model => model.toJSON()));
+    return Contracts.getAll();
   }
 
   @Invokable()
@@ -45,7 +44,6 @@ export class ContractsController extends ConvectorController<ChaincodeTx> {
   ) {
     let contract  = await Contracts.getOne(contractId);
 
-    // console.log(this.tx.identity.getAttributeValue("hf.Affiliation"));
 
     if (this.sender == contract.pngAddress) {
       throw new Error(`Confirming your own contacts is not allowed`);
@@ -74,7 +72,6 @@ export class ContractsController extends ConvectorController<ChaincodeTx> {
       @Param(Claim)
           claim: Claim
   ) {
-    // waiting for Olivia to send us the metadata structure
     let contractID = claim.contractID;
     const contract = await Contracts.getOne(contractID);
 
@@ -97,12 +94,12 @@ export class ContractsController extends ConvectorController<ChaincodeTx> {
       @Param(yup.string())
           claimID: string
   ) {
-    return Claim.getOne(claimID); //.then(model => model.toJSON());
+    return Claim.getOne(claimID);
   }
 
   @Invokable()
   public async getAllClaims(
   ) {
-    return Claim.getAll(); //.then(models => models.map(model => model.toJSON()));
+    return Claim.getAll();
   }
 }
