@@ -68,6 +68,10 @@ export class Contracts extends ConvectorModel<Contracts> {
   @Required()
   @Validate(yup.string())
   public pngAddress : string;
+
+  @Required()
+  @Validate(yup.string())
+  public document : string;
 }
 
 export class Claim extends ConvectorModel<Claim> {

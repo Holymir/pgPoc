@@ -58,6 +58,7 @@ describe('Contracts', () => {
   const resolutionAmount = 123456789;
   const endDate = new Date(Date.now()).setDate(new Date(Date.now()).getDate() + 10);
   const organization = "OtherOrganisation";
+  const document = "Ly8gdGhpcyBoYXMgb3RoZXIgcHJvcGVydGllcyBhbHNvCmV4cG9ydCBjbGFzcyBNYXN0ZXJTZXJ2aWNlQWdyZWVtZW50IGV4dGVuZHMgQ29udmVjdG9yTW9kZWw8TWFzdGVyU2VydmljZUFncmVlbWVudD4gewoKICBwdWJsaWMgcGFydHlBSWQ6IHN0cmluZzsKCiAgcHVibGljIHBhcnR5QklkOiBzdHJpbmc7Cn0KCi8vIEkgd2FudCB0byBnZXQgdGhlIGxpc3Qgb2YgTWFzdGVyU2VydmljZUFncmVlbWVudHMgb2YgdHdvIHBhcnRpZXMgKHBhcnR5IGEgYW5kIHBhcnR5IGIpCmV4cG9ydCBjbGFzcyBNU0FMaXN0IGV4dGVuZHMgQ29udmVjdG9yTW9kZWw8TVNBTGlzdD4gewogIHB1YmxpYyBwYXJ0eUFJZDogc3RyaW5nOwoKICBwdWJsaWMgcGFydHlCSWQ6IHN0cmluZzsKCiAgcHVibGljIGFncmVlbWVudHM6IE1hc3RlclNlcnZpY2VBZ3JlZW1lbnRbXTsKfQoKLy8gdG8gZ2V0IHRoZSBhZ3JlZW1lbnRzIG9mIGEgcGFydHkKLy8gcGFydHlJZCBjYW4gYmUgcGFydHlBSWQgb3IgcGFydHlCSWQKQEludm9rYWJsZSgpCnB1YmxpYyBhc3luYyBnZXRNU0FMaXN0QnlQYXJ0eSgKICAgIEBQYXJhbSh5dXAuc3RyaW5nKCkpCiAgICBwYXJ0eUlkOiBzdHJpbmcsCiAgKSB7CiAgICAvLyBUT0RPOiBjb3JyZWN0IHRoaXMgcXVlcnkKICAgIHJldHVybiBhd2FpdCBNU0FMaXN0LnF1ZXJ5KE1TQUxpc3QsIHsKICAgICAgJ3NlbGVjdG9yJzogewogICAgICAgICckb3InOiBbCiAgICAgICAgICB7ICdwYXJ0eUFJZCc6IHBhcnR5SWQgfSwKICAgICAgICAgIHsgJ3BhcnR5QklkJzogcGFydHlJZCB9LAogICAgICAgIF0KICAgICAgfQogICAgfSkKICB9Cg==";
 
   // claim model
   const claimID = uuid(2);
@@ -82,7 +83,8 @@ describe('Contracts', () => {
     startDate: Date.now(),
     endDate: endDate,
     organization: organization,
-    assignedFor: assignedFor
+    assignedFor: assignedFor,
+    document: document
   });
 
   const contractSample2 = new Contracts({
@@ -98,7 +100,8 @@ describe('Contracts', () => {
     startDate: Date.now(),
     endDate: Date.now(),
     organization: organization,
-    assignedFor: assignedFor
+    assignedFor: assignedFor,
+    document: document
   });
 
   const claimSample = new Claim({
@@ -181,7 +184,9 @@ describe('Contracts', () => {
 
     // await contractsCtrl.invokeClaim(claimSample);
 
-    await expect(contractsCtrl.invokeClaim(claimSample)).to.throw("Contract Second Contract is outdated");
+    await expect(contractsCtrl.invokeClaim(claimSample)).to.throw;
+
+  });
 
   it('should return one claim', async () => {
     let result = await contractsCtrl.getClaim(claimID);
