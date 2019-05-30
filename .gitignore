@@ -1,5 +1,6 @@
 node_modules/
 .history/
 dist/
-chaincode-person/
+chaincode-contracts/
 log/
+dist/

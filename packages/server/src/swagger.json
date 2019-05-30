@@ -1,0 +1,271 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Seans-TypeScript-NodeJS-CRUD-REST-API-Boilerplate",
+    "description": "A minimal and easy to follow example of what you need to create a CRUD style API in NodeJs using TypeScript",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:8000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "PnG POC",
+      "description": "API for creating Orders and invoking Claims"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/contract": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Get all Orders in the system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Contracts"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Creates an Order",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Order that we want to create",
+            "schema": {
+              "$ref": "#/definitions/Contracts"
+            }
+          }
+
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/contract/{id}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the Order",
+            "type": "string"
+          }
+        ],
+        "summary": "Get Order by ID",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Orders"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the Approve",
+            "type": "string"
+          }
+        ],
+        "summary": "Approve Order by ID",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/claim": {
+      "get": {
+        "tags": [
+          "Claims"
+        ],
+        "summary": "Get all Claims in the system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Claim"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Claims"
+        ],
+        "summary": "Invoke Claim",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Claim that we want to create",
+            "schema": {
+              "$ref": "#/definitions/Claim"
+            }
+          }
+
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/claim/{id}": {
+      "get": {
+        "tags": [
+          "Claims"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the Claim",
+            "type": "string"
+          }
+        ],
+        "summary": "Get Claim by ID",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+
+  },
+  "definitions": {
+    "Contracts": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "invoiceNumber": {
+          "type": "number"
+        },
+        "invoiceLineItem": {
+          "type": "number"
+        },
+        "invoiceAmount": {
+          "type": "number"
+        },
+        "claimAmount": {
+          "type": "number"
+        },
+        "claimReasonCode": {
+          "type": "number"
+        },
+        "resolutionCode": {
+          "type": "number"
+        },
+        "resolutionAmount": {
+          "type": "number"
+        },
+        "startDate": {
+          "type": "number"
+        },
+        "endDate": {
+          "type": "number"
+        },
+        "organization": {
+          "type": "string"
+        },
+        "isConfirmed": {
+          "type": "boolean"
+        },
+        "assignedFor": {
+          "type": "string"
+        },
+        "pngAddress": {
+          "type": "string"
+        },
+        "document": {
+          "type": "string"
+        }
+      }
+    },
+    "Claim": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "contractID": {
+          "type": "string"
+        },
+        "companyCode": {
+          "type": "number"
+        },
+        "invoiceNumber": {
+          "type": "number"
+        },
+        "customerNumber": {
+          "type": "number"
+        },
+        "documentNumber": {
+          "type": "number"
+        },
+        "documentDate": {
+          "type": "number"
+        },
+        "claimReasonCode": {
+          "type": "number"
+        },
+        "lineItem": {
+          "type": "number"
+        },
+        "reasonCode": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "isApproved": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

@@ -24,15 +24,9 @@ router.get('/contract', async (req: Request, res: Response) => {
     res.json(result);
 });
 
-router.post('/confirm', async (req: Request, res: Response) => {
+router.put('/contract/:id', async (req: Request, res: Response) => {
     console.log("confirming contract...");
-    await ContractsControllerBackEnd.confirmContract(req.body.id);
-    res.send(201);
-});
-
-router.post('/decline', async (req: Request, res: Response) => {
-    console.log("declining a contract...");
-    await ContractsControllerBackEnd.declineContract(req.body.id);
+    await ContractsControllerBackEnd.confirmContract(req.params.id);
     res.send(201);
 });
 
