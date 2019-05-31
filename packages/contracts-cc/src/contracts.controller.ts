@@ -44,7 +44,6 @@ export class ContractsController extends ConvectorController<ChaincodeTx> {
   ) {
     let contract  = await Contracts.getOne(contractId);
 
-
     if (this.sender == contract.pngAddress) {
       throw new Error(`Confirming your own contacts is not allowed`);
     }
@@ -75,8 +74,8 @@ export class ContractsController extends ConvectorController<ChaincodeTx> {
     let contractID = claim.contractID;
     const contract = await Contracts.getOne(contractID);
 
-    if(contract.isConfirmed) {
-      throw new Error(`Contract ${contract.name} is approved`)
+    if(!contract.isConfirmed) {
+      throw new Error(`Contract ${contract.name} is not approved`)
     }
 
     if(contract.endDate < Date.now()) {
